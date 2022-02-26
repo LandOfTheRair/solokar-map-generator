@@ -299,6 +299,18 @@ const addDoor = (tiledJSON, x, y, themeWall) => {
   tiledJSON.nextobjectid++;
 };
 
+const placeFoliage = (tiledJSON, themeFloor) => {
+  const treeSets = themeFloor.trees;
+  const treeChoices = ROT.RNG.getItem(treeSets);
+
+  tiledJSON.layers[3].data = tiledJSON.layers[3].data.map((d, idx) => {
+    if(tiledJSON.layers[4].data[idx] || tiledJSON.layers[2].data[idx]) return 0;
+    if(!ROT.RNG.getItem([true, ...Array(9).fill(false)])) return 0;
+
+    return ROT.RNG.getItem(treeChoices);
+  });
+};
+
 const placeRandomDecor = (tiledJSON) => {
   // TODO:
 };
@@ -422,6 +434,10 @@ const writeMap = (name, config, mapData, rooms, theme) => {
     placeRandomDecor(tiledJSON);
   }
 
+  if(theme.floor.allowTrees) {
+    placeFoliage(tiledJSON, theme.floor);
+  }
+
   // door debug code
   /*
   spriteData.doorStates.forEach((door, idx) => {
@@ -449,7 +465,7 @@ const generateMap = (seed) => {
   const randomConfigOrdering = ROT.RNG.shuffle(configs);
 
   // pick a config
-  const config = ROT.RNG.getItem(randomConfigOrdering.filter(x => x.algo === 'Digger'));
+  const config = ROT.RNG.getItem(randomConfigOrdering);
 
   // pick a theme
   const theme = ROT.RNG.getItem(Object.keys(themes));
