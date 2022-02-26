@@ -1,0 +1,1146 @@
+{
+    "doorStates": [
+        {
+            "tiledId": 387,
+            "direction": 0,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 384,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 387,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 385,
+            "direction": 0,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 386,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 385,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 388,
+            "direction": 0,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 392,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 388,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 389,
+            "direction": 0,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 393,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 389,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 390,
+            "direction": 0,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 394,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 390,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 391,
+            "direction": 0,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 395,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 391,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 857,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 858,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 857,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 859,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 860,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 859,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1058,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1059,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": -1,
+                        "spritesheetId": 1060,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1063,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 15,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1058,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1061,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1062,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1232,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1064,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 14,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1061,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1065,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1066,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": -1,
+                        "spritesheetId": 1067,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1065,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1068,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1069,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1233,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1068,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1070,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1071,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": -1,
+                        "spritesheetId": 1072,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1075,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 255,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1070,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1073,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1074,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1234,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1076,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 254,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1073,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1077,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1078,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": -1,
+                        "spritesheetId": 1079,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1086,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 79,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1077,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1080,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1081,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1235,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1087,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 254,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1080,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1088,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1089,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": -1,
+                        "spritesheetId": 1090,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1093,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 95,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1088,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1091,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1092,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1236,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1094,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 94,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1091,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1095,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1096,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": -1,
+                        "spritesheetId": 1097,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1100,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 111,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1095,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1098,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1099,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1237,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1101,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 110,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1098,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1102,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1103,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1102,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1107,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1108,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1107,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1112,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1113,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1112,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1115,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1116,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1238,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1115,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1117,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1118,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": -1,
+                        "spritesheetId": 1119,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1122,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 175,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1117,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1120,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1122,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1239,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1123,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 174,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1120,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1124,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1125,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": -1,
+                        "spritesheetId": 1126,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1124,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1127,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1128,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1240,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1127,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1129,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1130,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": -1,
+                        "spritesheetId": 1131,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1129,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1132,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1133,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1241,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1132,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1211,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1212,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": -1,
+                        "spritesheetId": 1213,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1216,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 351,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1211,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1214,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1215,
+                        "spritesheetName": "Decor"
+                    },
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1242,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "revealed": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1217,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "hidden": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 350,
+                        "spritesheetName": "Walls"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1214,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1218,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1219,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1218,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1220,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1221,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1220,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1222,
+            "direction": 24,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1223,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1222,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        },
+        {
+            "tiledId": 1224,
+            "direction": 66,
+            "states": {
+                "opened": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1225,
+                        "spritesheetName": "Decor"
+                    }
+                ],
+                "default": [
+                    {
+                        "x": 0,
+                        "y": 0,
+                        "spritesheetId": 1224,
+                        "spritesheetName": "Decor"
+                    }
+                ]
+            }
+        }
+    ]
+}
