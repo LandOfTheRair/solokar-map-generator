@@ -22,6 +22,27 @@ TODO:
 - add succorport to prevent everything
 */
 
+const foliage = {
+  apple:      [1998, 1999, 2000, 2001, 2002, 2003],
+  fall:       [2004, 2005, 2006, 2007, 2012, 2013, 2014, 2015, 2016, 2017, 2018],
+  dead:       [2133, 2134, 2135, 2136, 2137, 2138, 2139, 2140, 2172, 2173, 2174, 2175, 2177, 2178, 2179, 2180, 2146, 2147, 2148, 2149, 2150, 2151, 2152, 2153, 2159, 2160, 2161, 2162, 2163, 2164, 2166, 2167],
+  evergreen:  [2169, 2170, 2171, 2141, 2142, 2144, 2145, 2181, 2182, 2183, 2184, 2155, 2156, 2157, 2158, 2168]
+};
+
+const decor = {
+  furrug: [1701, 1702, 1703, 1704, 1705, 1706, 1707, 1708, 1709, 1710, 1711, 1712],
+  bed: [1729, 1730, 1731, 1732, 1733, 1734, 1735, 1736, 1737, 1738, 1739, 1740, 1725, 1726, 1727, 1728, 1517, 1518, 1519, 1520],
+  pillar: [2259, 2260, 2261, 2210],
+  grave: [1761, 1762, 1763, 1764, 1765, 1766, 1767, 1768, 1769, 1770, 1771, 1772, 1773, 1774, 1775, 1776, 1796, 1797, 1798, 1799, 1800, 1801],
+  fountain: [2226, 2227, 2228, 2229],
+  barrel: [2374, 2375, 2206],
+  misc: [1613, 1614, 1615, 1616, 2211, 2212, 2213, 2214, 2215, 2209, 2223, 2224, 2105, 1840, 1841, 1842, 1843, 1844, 1845, 1846, 1847, 1848, 2207, 2208, 2203, 1838, 1839, 1849, 1850, 1851, 1852, 1853, 1854, 1855],
+  furniture: [1581, 1582, 1583, 1584, 1585, 1586, 1587, 1588, 1589, 1590, 1591, 1592, 1593, 1594, 1595, 1596, 1597, 1598, 1599, 1600],
+  water: [2275, 2276, 2277, 2278, 2279, 2280],
+  oil: [2281, 2282, 2283, 2284, 2285, 2286],
+  blood: [2287, 2288, 2289, 2290, 2291],
+  directional: [1501, 1502, 1503, 1504, 1505, 1506, 1507, 1508, 1509, 1510, 1511, 1512, 1513, 1514, 1515, 1516, 1521, 1522, 1523, 1524, 1529, 1530, 1531, 1532, 1533, 1534, 1535, 1536, 1537, 1538, 1539, 1540, 1541, 1542, 1543, 1544, 1601, 1602, 1603, 1604]
+};
 
 // each possible theme floor
 const floors = {
@@ -30,12 +51,12 @@ const floors = {
   nicetile:       { spriteStart: 96   },
   wood:           { spriteStart: 144  },
   mist:           { spriteStart: 288  },
-  grassair:       { spriteStart: 576  },
+  grassair:       { spriteStart: 576, allowTrees: true, trees: [foliage.apple, foliage.fall, foliage.dead, foliage.evergreen] },
   cobblestone:    { spriteStart: 672  },
-  snow:           { spriteStart: 720  },
-  flowergrass:    { spriteStart: 816  },
-  deepgrass:      { spriteStart: 864  },
-  swamp:          { spriteStart: 912  },
+  snow:           { spriteStart: 720, allowTrees: true, trees: [foliage.dead, foliage.evergreen]  },
+  flowergrass:    { spriteStart: 816, allowTrees: true, trees: [foliage.apple]  },
+  deepgrass:      { spriteStart: 864, },
+  swamp:          { spriteStart: 912, allowTrees: true, trees: [foliage.dead, foliage.evergreen]  },
 };
 
 // each possible theme wall
@@ -55,6 +76,12 @@ const walls = {
   tree:           { spriteStart: 288, allowEmptyWalls: true },
   library:        { spriteStart: 320 },
   goldcave:       { spriteStart: 336, allowDoors: true, doorStart: 30,  allowHiddenWalls: true },
+};
+
+const fluids = {
+  water:          { spriteStart: 384 },
+  darkwater:      { spriteStart: 768 },
+  lava:           { spriteStart: 432 },
 };
 
 // each possible theme config
