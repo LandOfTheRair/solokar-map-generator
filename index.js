@@ -6,11 +6,11 @@ const spriteData = require('./sprite-data.json');
 
 const genWidth = 100;
 const genHeight = 100;
+const gutter = 5;
 
 /*
 TODO:
 - add fluids (floor flag; create a small digger map and overlay it on top)
-- add foliage (floor flag; each tile has a {treeSpawn} chance of spawning a tree, spawn randomly on walls and as foliage)
 - add decor randomly (fill spaces randomly with decor; need a decor list per theme)
 - add decor to rooms (fill rooms with decor - need a decor list per theme)
 - add floors
@@ -27,6 +27,12 @@ const foliage = {
   fall:           [2004, 2005, 2006, 2007, 2012, 2013, 2014, 2015, 2016, 2017, 2018],
   dead:           [2133, 2134, 2135, 2136, 2137, 2138, 2139, 2140, 2172, 2173, 2174, 2175, 2177, 2178, 2179, 2180, 2146, 2147, 2148, 2149, 2150, 2151, 2152, 2153, 2159, 2160, 2161, 2162, 2163, 2164, 2166, 2167],
   evergreen:      [2169, 2170, 2171, 2141, 2142, 2144, 2145, 2181, 2182, 2183, 2184, 2155, 2156, 2157, 2158, 2168]
+};
+
+const fluids = {
+  water:          { spriteStart: 384 },
+  darkwater:      { spriteStart: 768 },
+  lava:           { spriteStart: 432 },
 };
 
 const decor = {
@@ -46,17 +52,17 @@ const decor = {
 
 // each possible theme floor
 const floors = {
-  darktile:       { spriteStart: 0    },
-  sand:           { spriteStart: 48   },
-  nicetile:       { spriteStart: 96   },
+  darktile:       { spriteStart: 0,   allowFluids: true, fluids: [fluids.water, fluids.lava, fluids.darkwater] },
+  sand:           { spriteStart: 48,  allowFluids: true, fluids: [fluids.water, fluids.lava] },
+  nicetile:       { spriteStart: 96,  allowFluids: true, fluids: [fluids.water, fluids.lava, fluids.darkwater]},
   wood:           { spriteStart: 144  },
   mist:           { spriteStart: 288  },
-  grassair:       { spriteStart: 576, allowTrees: true, trees: [foliage.apple, foliage.fall, foliage.dead, foliage.evergreen] },
-  cobblestone:    { spriteStart: 672  },
-  snow:           { spriteStart: 720, allowTrees: true, trees: [foliage.dead, foliage.evergreen]  },
-  flowergrass:    { spriteStart: 816, allowTrees: true, trees: [foliage.apple]  },
-  deepgrass:      { spriteStart: 864, },
-  swamp:          { spriteStart: 912, allowTrees: true, trees: [foliage.dead, foliage.evergreen]  },
+  grassair:       { spriteStart: 576, allowFluids: true, fluids: [fluids.water, fluids.darkwater],  allowTrees: true, trees: [foliage.apple, foliage.fall, foliage.dead, foliage.evergreen] },
+  cobblestone:    { spriteStart: 672, allowFluids: true, fluids: [fluids.water, fluids.lava]  },
+  snow:           { spriteStart: 720, allowFluids: true, fluids: [fluids.darkwater],                allowTrees: true, trees: [foliage.dead, foliage.evergreen]  },
+  flowergrass:    { spriteStart: 816, allowFluids: true, fluids: [fluids.water, fluids.darkwater],  allowTrees: true, trees: [foliage.apple]  },
+  deepgrass:      { spriteStart: 864, allowFluids: true, fluids: [fluids.water, fluids.darkwater], },
+  swamp:          { spriteStart: 912, allowFluids: true, fluids: [fluids.water, fluids.darkwater], allowTrees: true, trees: [foliage.dead, foliage.evergreen]  },
 };
 
 // each possible theme wall
@@ -76,12 +82,6 @@ const walls = {
   tree:           { spriteStart: 288, allowEmptyWalls: true },
   library:        { spriteStart: 320 },
   goldcave:       { spriteStart: 336, allowDoors: true, doorStart: 30,  allowHiddenWalls: true },
-};
-
-const fluids = {
-  water:          { spriteStart: 384 },
-  darkwater:      { spriteStart: 768 },
-  lava:           { spriteStart: 432 },
 };
 
 // each possible theme config
@@ -216,6 +216,21 @@ const configs = [
   }
 ];
 
+const fluidConfigs = [
+  {
+    name: '(Wet) Uniform Maze',
+    algo: 'Uniform',
+    algoArgs: [genWidth + (gutter * 2), genHeight + (gutter * 2), { roomWidth: [3, 4], roomHeight: [3, 4], corridorLength: [3, 8], roomDugPercentage: 0.3 }]
+  },
+  {
+    name: '(Wet) Cavelike, Cavernous, Open',
+    algo: 'Cellular',
+    algoArgs: [genWidth + (gutter * 2), genHeight + (gutter * 2), { born: [4, 5, 6, 7, 8], survive: [3, 4, 5] }],
+    randomize: 0.3,
+    invert: true
+  },
+];
+
 // fill a map array with wall tiles (to start)
 const generateFullMap = () => {
   return Array(genHeight + 10).fill(0).map(y => Array(genWidth + 10).fill(3));
@@ -311,6 +326,37 @@ const placeFoliage = (tiledJSON, themeFloor) => {
   });
 };
 
+const placeFluids = (tiledJSON, themeWall, themeFloor) => {
+
+  const firstGid = tiledJSON.tilesets[0].firstgid;
+  const fluidSets = themeFloor.fluids;
+  const fluidChoice = ROT.RNG.getItem(fluidSets);
+  
+  // pick a config
+  const fluidConfig = ROT.RNG.getItem(fluidConfigs);
+  console.log('Fluid Config', fluidConfig.name);
+
+  // generate a map
+  const mapGenerator = new ROT.Map[fluidConfig.algo](...fluidConfig.algoArgs);
+
+  // some maps require randomize to be set
+  if(fluidConfig.randomize) {
+    mapGenerator.randomize(fluidConfig.randomize);
+  }
+
+  mapGenerator.create((x, y, value) => {
+    const pos = x + (y * (genWidth + (gutter * 2)));
+
+    if(fluidConfig.invert && !value) return;
+    if(!fluidConfig.invert && value) return;
+    if(themeWall.allowEmptyWalls && tiledJSON.layers[4].data[pos]) return;
+
+    tiledJSON.layers[2].data[pos] = firstGid + fluidChoice.spriteStart;
+  });
+
+  tiledJSON.layers[2].data = autotileWater(tiledJSON.layers[2].data);
+}
+
 const placeRandomDecor = (tiledJSON) => {
   // TODO:
 };
@@ -318,6 +364,85 @@ const placeRandomDecor = (tiledJSON) => {
 const placeRoomDecor = (tiledJSON, room) => {
   // TODO:
   // room.getLeft() getRight() getTop() getBottom() getCenter() [x,y]
+};
+
+const autotileWater = (waterArray, width = 110, height = 110) => {
+  return waterArray.map((value, idx) => {
+    if(value === 0) return 0;
+
+    const { x, y } = getTileXYFromIndex(idx, width);
+
+    const fluidNW = getTileAtXY(waterArray, width, x - 1,  y - 1)  !== 0;
+    const fluidN  = getTileAtXY(waterArray, width, x,      y - 1)  !== 0;
+    const fluidNE = getTileAtXY(waterArray, width, x + 1,  y - 1)  !== 0;
+    const fluidE =  getTileAtXY(waterArray, width, x + 1,  y)      !== 0;
+    const fluidSE = getTileAtXY(waterArray, width, x + 1,  y + 1)  !== 0;
+    const fluidS  = getTileAtXY(waterArray, width, x,      y + 1)  !== 0;
+    const fluidSW = getTileAtXY(waterArray, width, x - 1,  y + 1)  !== 0;
+    const fluidW  = getTileAtXY(waterArray, width, x - 1,  y)      !== 0;
+
+    if (!fluidNW && fluidN && fluidNE && fluidE && fluidSE && fluidS && fluidSW && fluidW) return value + 1; // NW corner missing
+    if (fluidNW && fluidN && !fluidNE && fluidE && fluidSE && fluidS && fluidSW && fluidW) return value + 2; // NE corner missing
+    if (fluidNW && fluidN && fluidNE && fluidE && !fluidSE && fluidS && fluidSW && fluidW) return value + 3; // SE corner missing
+    if (fluidNW && fluidN && fluidNE && fluidE && fluidSE && fluidS && !fluidSW && fluidW) return value + 4; // SW corner missing
+
+    if (!fluidNW && fluidN && !fluidNE && fluidE && fluidSE && fluidS && fluidSW && fluidW) return value + 5;  // NE,NW corner missing
+    if (fluidNW && fluidN && !fluidNE && fluidE && !fluidSE && fluidS && fluidSW && fluidW) return value + 6;  // NE,SE corner missing
+    if (fluidNW && fluidN && fluidNE && fluidE && !fluidSE && fluidS && !fluidSW && fluidW) return value + 7;  // SE,SW corner missing
+    if (!fluidNW && fluidN && fluidNE && fluidE && fluidSE && fluidS && !fluidSW && fluidW) return value + 8;  // SW,NW corner missing
+
+    if (!fluidNW && fluidN && !fluidNE && fluidE && fluidSE && fluidS && !fluidSW && fluidW) return value + 9; // NW,NE,SW corner missing
+    if (!fluidNW && fluidN && !fluidNE && fluidE && !fluidSE && fluidS && fluidSW && fluidW) return value + 10; // NW,NE,SE corner missing
+    if (fluidNW && fluidN && !fluidNE && fluidE && !fluidSE && fluidS && !fluidSW && fluidW) return value + 11; // NE,SE,SW corner missing
+    if (!fluidNW && fluidN && fluidNE && fluidE && !fluidSE && fluidS && !fluidSW && fluidW) return value + 12; // NW,SE,SW corner missing
+
+    if (!fluidNW && fluidN && !fluidNE && fluidE && !fluidSE && fluidS && !fluidSW && fluidW) return value + 13;  // ALL corner missing
+
+    if (!fluidN && fluidE && fluidSE && fluidS && fluidSW && fluidW) return value + 14; // N missing NE,NW unchecked
+    if (fluidNW && fluidN && !fluidE && fluidS && fluidSW && fluidW) return value + 15; // E missing NE,SE unchecked
+    if (fluidNW && fluidN && fluidNE && fluidE && !fluidS && fluidW) return value + 16; // S missing SE,SW unchecked
+    if (fluidN && fluidNE && fluidE && fluidSE && fluidS && !fluidW) return value + 17; // W missing SW,NW unchecked
+
+    if (!fluidNW && fluidN && fluidNE && fluidE && !fluidS && fluidW) return value + 18;  // NW,S missing SE,SW unchecked
+    if (fluidNW && fluidN && !fluidNE && fluidE && !fluidS && fluidW) return value + 19;  // NE,S missing SE,SW unchecked
+    if (!fluidN && fluidE && !fluidSE && fluidS && fluidSW && fluidW) return value + 20;  // SE,N missing NE,NW unchecked
+    if (!fluidN && fluidE && fluidSE && fluidS && !fluidSW && fluidW) return value + 21;  // SW,N missing NE,NW unchecked
+
+    if (!fluidNW && fluidN && !fluidE && fluidS && fluidSW && fluidW) return value + 22;  // NW,E missing NE,SE unchecked
+    if (fluidN && !fluidNE && fluidE && fluidSE && fluidS && !fluidW) return value + 23;  // NE,W missing NW,SW unchecked
+    if (fluidN && fluidNE && fluidE && !fluidSE && fluidS && !fluidW) return value + 24;  // SE,W missing NW,SW unchecked
+    if (fluidNW && fluidN && !fluidE && fluidS && !fluidSW && fluidW) return value + 25;  // SW,E missing NE,SE unchecked
+
+    if (!fluidN && fluidE && !fluidSE && fluidS && !fluidSW && fluidW) return value + 26; // SE,SW,N missing NW,NE unchecked
+    if (!fluidNW && fluidN && !fluidE && fluidS && !fluidSW && fluidW) return value + 27; // NW,SW,E missing SE,NE unchecked
+    if (!fluidNW && fluidN && !fluidNE && fluidE && !fluidS && fluidW) return value + 28; // NE,NW,S missing SE,SW unchecked
+    if (fluidN && !fluidNE && fluidE && !fluidSE && fluidS && !fluidW) return value + 29; // NE,SE,W missing NW,SW unchecked
+
+    if (!fluidN && fluidE && fluidSE && fluidS && !fluidW) return value + 30; // E,SE,S present, NE,SW,NW unchecked
+    if (!fluidN && !fluidE && fluidS && fluidSW && fluidW) return value + 31; // W,SW,S present, NW,SE,NE unchecked
+    if (fluidNW && fluidN && !fluidE && !fluidS && fluidW) return value + 32; // W,NW,N present, NE,SE,SW unchecked
+    if (fluidN && fluidNE && fluidE && !fluidS && !fluidW) return value + 33; // E,NE,N present, NW,SE,SW unchecked
+
+    if (!fluidN && fluidE && fluidS && !fluidW) return value + 34;  // E,S present, CORNERS unchecked
+    if (!fluidN && !fluidE && fluidS && fluidW) return value + 35;  // W,S present, CORNERS unchecked
+    if (fluidN && !fluidE && !fluidS && fluidW) return value + 36;  // W,N present, CORNERS unchecked
+    if (fluidN && fluidE && !fluidS && !fluidW) return value + 37;  // E,N present, CORNERS unchecked
+
+    if (!fluidN && !fluidE && fluidS && !fluidW) return value + 38; // S present, CORNERS unchecked
+    if (!fluidN && !fluidE && !fluidS && fluidW) return value + 39; // W present, CORNERS unchecked
+    if (fluidN && !fluidE && !fluidS && !fluidW) return value + 40; // N present, CORNERS unchecked
+    if (!fluidN && fluidE && !fluidS && !fluidW) return value + 41; // E present, CORNERS unchecked
+
+    if (fluidN && !fluidE && fluidS && !fluidW) return value + 42;  // N,S present, CORNERS unchecked
+    if (!fluidN && fluidE && !fluidS && fluidW) return value + 43;  // E,W present, CORNERS unchecked
+
+    if (!fluidNW && fluidN && fluidNE && fluidE && !fluidSE && fluidS && fluidSW && fluidW) return value + 44;  // NW,SE missing
+    if (fluidNW && fluidN && !fluidNE && fluidE && fluidSE && fluidS && !fluidSW && fluidW) return value + 46;  // NE,SW missing
+
+    if (fluidNW && fluidN && fluidNE && fluidE && fluidSE && fluidS && fluidSW && fluidW) return value + 47;  // ALL present
+
+    return value;
+  });
 };
 
 const autotileWalls = (wallsArray, doorsArray, width = 110, height = 110, allowEmptyWalls = false) => {
@@ -353,25 +478,25 @@ const autotileWalls = (wallsArray, doorsArray, width = 110, height = 110, allowE
     const hasRight = hasRightTile || hasRightDoor;
 
     // "auto tiling" lol fuck you I'm doing this manually
-    if(!hasTop && !hasBottom && !hasLeft && !hasRight) return allowEmptyWalls ? wall : 0;
-    if(hasTop && hasBottom && hasLeft && hasRight) return wall + 1;
-    if(!hasTop && hasBottom && hasLeft && hasRight) return wall + 2;
-    if(hasTop && hasBottom && hasLeft && !hasRight) return wall + 3;
+    if(!hasTop && !hasBottom && !hasLeft && !hasRight)  return allowEmptyWalls ? wall : 0;
+    if(hasTop && hasBottom && hasLeft && hasRight)      return wall + 1;
+    if(!hasTop && hasBottom && hasLeft && hasRight)     return wall + 2;
+    if(hasTop && hasBottom && hasLeft && !hasRight)     return wall + 3;
 
-    if(hasTop && !hasBottom && hasLeft && hasRight) return wall + 4;
-    if(hasTop && hasBottom && !hasLeft && hasRight) return wall + 5;
-    if(!hasTop && hasBottom && !hasLeft && hasRight) return wall + 6;
-    if(!hasTop && hasBottom && hasLeft && !hasRight) return wall + 7;
+    if(hasTop && !hasBottom && hasLeft && hasRight)     return wall + 4;
+    if(hasTop && hasBottom && !hasLeft && hasRight)     return wall + 5;
+    if(!hasTop && hasBottom && !hasLeft && hasRight)    return wall + 6;
+    if(!hasTop && hasBottom && hasLeft && !hasRight)    return wall + 7;
 
-    if(hasTop && !hasBottom && hasLeft && !hasRight) return wall + 8;
-    if(hasTop && !hasBottom && !hasLeft && hasRight) return wall + 9;
-    if(!hasTop && hasBottom && !hasLeft && !hasRight) return wall + 10;
-    if(!hasTop && !hasBottom && hasLeft && !hasRight) return wall + 11;
+    if(hasTop && !hasBottom && hasLeft && !hasRight)    return wall + 8;
+    if(hasTop && !hasBottom && !hasLeft && hasRight)    return wall + 9;
+    if(!hasTop && hasBottom && !hasLeft && !hasRight)   return wall + 10;
+    if(!hasTop && !hasBottom && hasLeft && !hasRight)   return wall + 11;
 
-    if(hasTop && !hasBottom && !hasLeft && !hasRight) return wall + 12;
-    if(!hasTop && !hasBottom && !hasLeft && hasRight) return wall + 13;
-    if(hasTop && hasBottom && !hasLeft && !hasRight) return wall + 14;
-    if(!hasTop && !hasBottom && hasLeft && hasRight) return wall + 15;
+    if(hasTop && !hasBottom && !hasLeft && !hasRight)   return wall + 12;
+    if(!hasTop && !hasBottom && !hasLeft && hasRight)   return wall + 13;
+    if(hasTop && hasBottom && !hasLeft && !hasRight)    return wall + 14;
+    if(!hasTop && !hasBottom && hasLeft && hasRight)    return wall + 15;
 
     return wall;
   });
@@ -434,6 +559,10 @@ const writeMap = (name, config, mapData, rooms, theme) => {
     placeRandomDecor(tiledJSON);
   }
 
+  if(theme.floor.allowFluids) {
+    placeFluids(tiledJSON, theme.wall, theme.floor);
+  }
+
   if(theme.floor.allowTrees) {
     placeFoliage(tiledJSON, theme.floor);
   }
@@ -453,7 +582,7 @@ const generateMap = (seed) => {
 
   if(!seed) {
     // year + month + day of month, should always be unique
-    seed = new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate()
+    seed = new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate();
   }
 
   const finalMap = generateFullMap();
@@ -472,8 +601,9 @@ const generateMap = (seed) => {
   const themeData = themes[theme];
 
   // generate a map
+  const mapName = `map-${seed}-${config.name}`;
   const mapGenerator = new ROT.Map[config.algo](...config.algoArgs);
-  console.log('MapGen Config', { config: config.name, theme });
+  console.log('MapGen Config', { mapName, config: config.name, theme });
 
   // some maps require randomize to be set
   if(config.randomize) {
@@ -504,7 +634,7 @@ const generateMap = (seed) => {
     mapGenerator.connect(updateNode);
   }
 
-  writeMap(`map-${seed}-${config.name}`, config, finalMap, rooms, themeData);
+  writeMap(mapName, config, finalMap, rooms, themeData);
 };
 
 for(let i = 0; i < 10; i++) {
