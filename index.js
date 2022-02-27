@@ -10,7 +10,6 @@ const gutter = 5;
 
 /*
 TODO:
-- add fluids (floor flag; create a small digger map and overlay it on top)
 - add decor randomly (fill spaces randomly with decor; need a decor list per theme)
 - add decor to rooms (fill rooms with decor - need a decor list per theme)
 - add floors
