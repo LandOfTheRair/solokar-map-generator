@@ -10,11 +10,10 @@ const gutter = 5;
 
 /*
 TODO:
-- add decor to rooms (fill rooms with decor - need a decor list per theme)
 - add floors
-- add spawners
+- add spawners (rarely, add monsters that fight with these monsters - ie heniz/steffen, crazed/not)
 - add loot
-- add random green npcs
+- add random green npcs (trainers, etc; healer trainer must not recall)
 - add portal entries (one per quadrant)
 - add portal exits (one per quadrant)
 - add succorport to prevent everything
@@ -53,7 +52,36 @@ decor.town = [...decor.furrug, ...decor.bed, ...decor.barrel, ...decor.furniture
 
 // every possible room type (for digger maze rooms)
 const roomDecorConfigs = [
-
+  { name: 'Bedroom', decors: [
+    { quantity: [1, 2], decor: [...decor.bed] },
+    { quantity: [2], decor: [...decor.furniture] },
+    { quantity: [4], decor: [...decor.furrug] },
+  ] },
+  { name: 'Barracks', decors: [
+    { quantity: [7, 8, 9, 10], decor: [...decor.bed] },
+  ] },
+  { name: 'Barracks w/ extra', decors: [
+    { quantity: [4, 5, 6], decor: [...decor.bed] },
+    { quantity: [4, 5, 6], decor: [...decor.furrug, ...decor.furniture] },
+  ] },
+  { name: 'Misc', decors: [
+    { quantity: [4, 5, 6, 7, 8, 9, 10], decor: [...decor.misc] },
+  ] },
+  { name: 'Lounge', decors: [
+    { quantity: [4, 5, 6, 7, 8, 9, 10, 11, 12], decor: [...decor.furniture, ...decor.furrug] },
+  ] },
+  { name: 'Storage', decors: [
+    { quantity: [3, 4, 5, 6, 7, 8, 9, 10], decor: [...decor.barrel] },
+  ] },
+  { name: 'Struggle', decors: [
+    { quantity: [5, 6, 7, 8, 9, 10], decor: [...decor.blood] },
+  ] },
+  { name: 'Spill', decors: [
+    { quantity: [2, 3, 4, 5, 6, 7, 8, 9], decor: [...decor.water] },
+  ] },
+  { name: 'Utilities', decors: [
+    { quantity: [4, 5, 6, 7, 8, 9, 10], decor: [...decor.directional] },
+  ] }
 ];
 
 // each possible theme floor
@@ -394,8 +422,50 @@ const placeRandomDecor = (tiledJSON, themeFloor, chances = 9) => {
 };
 
 const placeRoomDecor = (tiledJSON, themeFloor, room) => {
-  // TODO: place specific "rooms" (bed, a few furniture, etc based on room config - some storage rooms, some bedrooms, some lounges, etc)
-  // room.getLeft() getRight() getTop() getBottom() getCenter() [x,y]
+  const roomTypeChoice = ROT.RNG.getItem(roomDecorConfigs);
+
+  const coords = [];
+
+  for(let x = room.getLeft(); x <= room.getRight(); x++) {
+    for(let y = room.getTop(); y <= room.getBottom(); y++) {
+      const i = (x + gutter) + (tiledJSON.width * (y + gutter));
+      if(tiledJSON.layers[4].data[i] || tiledJSON.layers[3].data[i] || tiledJSON.layers[2].data[i]) continue;
+
+      coords.push({ x: x + gutter, y: y + gutter });
+    }
+  }
+  
+  roomTypeChoice.decors.forEach(({ quantity, decor }) => {
+    const realQty = ROT.RNG.getItem(quantity);
+
+    for(let i = 0; i < realQty; i++) {
+      if(coords.length === 0) break;
+
+      const randomIdx = ROT.RNG.getUniform() * coords.length;
+      const coordObj = coords.splice(randomIdx, 1)[0];
+
+      const { x, y } = coordObj;
+
+      // no gid math because we ripped these numbers directly
+      const obj = {
+        gid: ROT.RNG.getItem(decor),
+        height: 64,
+        id: tiledJSON.nextobjectid,
+        name: "",
+        rotation: 0,
+        type: "",
+        visible: true,
+        width: 64,
+        x: x * 64,
+        y: (y + 1) * 64
+      };
+    
+      tiledJSON.layers[5].objects.push(obj);
+      tiledJSON.nextobjectid++;
+
+    }
+  });
+
 };
 
 const autotileWater = (waterArray, width = 110, height = 110) => {
@@ -582,7 +652,7 @@ const writeMap = (name, config, mapData, rooms, theme) => {
     console.log('Fluid Config', fluidConfig.name);
 
     let attempts = 0;
-    while(tiledJSON.layers[2].data.length === 0 && attempts++ < 10) {
+    while(tiledJSON.layers[2].data.filter(Boolean).length === 0 && attempts++ < 10) {
       placeFluids(tiledJSON, fluidConfig, theme.wall, theme.floor);
     }
 
@@ -599,7 +669,7 @@ const writeMap = (name, config, mapData, rooms, theme) => {
   if(config.doors && theme.wall.allowDoors) {
     rooms.forEach(room => {
       room.getDoors((x, y) => {
-        addDoor(tiledJSON, x + 5, y + 5, theme.wall);
+        addDoor(tiledJSON, x + gutter, y + gutter, theme.wall);
       });
 
       placeRoomDecor(tiledJSON, theme.floor, room);
@@ -608,7 +678,7 @@ const writeMap = (name, config, mapData, rooms, theme) => {
     placeRandomDecor(tiledJSON, theme.floor, 99);
 
   } else {
-    placeRandomDecor(tiledJSON, theme.floor, 9);
+    placeRandomDecor(tiledJSON, theme.floor, 19);
   }
 
   // door debug code
@@ -630,6 +700,8 @@ const generateMap = (seed) => {
   }
 
   const finalMap = generateFullMap();
+
+  // const rng = ROT.RNG.clone();
 
   // pick a seed
   ROT.RNG.setSeed(seed);
@@ -656,7 +728,7 @@ const generateMap = (seed) => {
 
   // update a node, but offset+5 because of the gutter for the map
   const updateNode = (x, y, value) => {
-    finalMap[y + 5][x + 5] = value;
+    finalMap[y + gutter][x + gutter] = value;
   };
 
   // do iterations based on number of iterations (mostly for cellular automata)
