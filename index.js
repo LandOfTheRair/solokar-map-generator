@@ -10,7 +10,6 @@ const gutter = 5;
 
 /*
 TODO:
-- add decor randomly (fill spaces randomly with decor; need a decor list per theme)
 - add decor to rooms (fill rooms with decor - need a decor list per theme)
 - add floors
 - add spawners
@@ -49,19 +48,27 @@ const decor = {
   directional:    [1501, 1502, 1503, 1504, 1505, 1506, 1507, 1508, 1509, 1510, 1511, 1512, 1513, 1514, 1515, 1516, 1521, 1522, 1523, 1524, 1529, 1530, 1531, 1532, 1533, 1534, 1535, 1536, 1537, 1538, 1539, 1540, 1541, 1542, 1543, 1544, 1601, 1602, 1603, 1604]
 };
 
+decor.all = Object.values(decor).reduce((a, b) => a.concat(b), []);
+decor.town = [...decor.furrug, ...decor.bed, ...decor.barrel, ...decor.furniture, ...decor.directional];
+
+// every possible room type (for digger maze rooms)
+const roomDecorConfigs = [
+
+];
+
 // each possible theme floor
 const floors = {
-  darktile:       { spriteStart: 0,   allowFluids: true, fluids: [fluids.water, fluids.lava, fluids.darkwater] },
-  sand:           { spriteStart: 48,  allowFluids: true, fluids: [fluids.water, fluids.lava] },
-  nicetile:       { spriteStart: 96,  allowFluids: true, fluids: [fluids.water, fluids.lava, fluids.darkwater]},
-  wood:           { spriteStart: 144  },
-  mist:           { spriteStart: 288  },
-  grassair:       { spriteStart: 576, allowFluids: true, fluids: [fluids.water, fluids.darkwater],  allowTrees: true, trees: [foliage.apple, foliage.fall, foliage.dead, foliage.evergreen] },
-  cobblestone:    { spriteStart: 672, allowFluids: true, fluids: [fluids.water, fluids.lava]  },
-  snow:           { spriteStart: 720, allowFluids: true, fluids: [fluids.darkwater],                allowTrees: true, trees: [foliage.dead, foliage.evergreen]  },
-  flowergrass:    { spriteStart: 816, allowFluids: true, fluids: [fluids.water, fluids.darkwater],  allowTrees: true, trees: [foliage.apple]  },
-  deepgrass:      { spriteStart: 864, allowFluids: true, fluids: [fluids.water, fluids.darkwater], },
-  swamp:          { spriteStart: 912, allowFluids: true, fluids: [fluids.water, fluids.darkwater], allowTrees: true, trees: [foliage.dead, foliage.evergreen]  },
+  darktile:       { spriteStart: 0,   allowFluids: true, fluids: [fluids.water, fluids.lava, fluids.darkwater], decor: [decor.town] },
+  sand:           { spriteStart: 48,  allowFluids: true, fluids: [fluids.water, fluids.lava], decor: [decor.oil, decor.blood, decor.water, decor.barrel] },
+  nicetile:       { spriteStart: 96,  allowFluids: true, fluids: [fluids.water, fluids.lava, fluids.darkwater], decor: [decor.town] },
+  wood:           { spriteStart: 144, decor: [decor.town] },
+  mist:           { spriteStart: 288, decor: [] },
+  grassair:       { spriteStart: 576, allowFluids: true, fluids: [fluids.water, fluids.darkwater], allowTrees: true, trees: [foliage.apple, foliage.fall, foliage.dead, foliage.evergreen], decor: [decor.grave, decor.directional, decor.misc] },
+  cobblestone:    { spriteStart: 672, allowFluids: true, fluids: [fluids.water, fluids.lava], decor: [decor.town]  },
+  snow:           { spriteStart: 720, allowFluids: true, fluids: [fluids.darkwater], allowTrees: true, trees: [foliage.dead, foliage.evergreen], decor: [decor.grave, decor.misc, decor.directional] },
+  flowergrass:    { spriteStart: 816, allowFluids: true, fluids: [fluids.water, fluids.darkwater], allowTrees: true, trees: [foliage.apple], decor: [decor.misc] },
+  deepgrass:      { spriteStart: 864, allowFluids: true, fluids: [fluids.water, fluids.darkwater], decor: [decor.misc] },
+  swamp:          { spriteStart: 912, allowFluids: true, fluids: [fluids.water, fluids.darkwater], allowTrees: true, trees: [foliage.dead, foliage.evergreen], decor: [decor.grave, decor.misc, decor.directional] },
 };
 
 // each possible theme wall
@@ -354,12 +361,40 @@ const placeFluids = (tiledJSON, fluidConfig, themeWall, themeFloor) => {
   tiledJSON.layers[2].data = autotileWater(tiledJSON.layers[2].data);
 }
 
-const placeRandomDecor = (tiledJSON) => {
-  // TODO:
+// chances = 1/x+1 chance per tile
+const placeRandomDecor = (tiledJSON, themeFloor, chances = 9) => {
+  for(let i = 0; i < tiledJSON.height * tiledJSON.width; i++) {
+    if(tiledJSON.layers[4].data[i] || tiledJSON.layers[3].data[i] || tiledJSON.layers[2].data[i]) continue;
+    if(ROT.RNG.getItem([false, ...Array(chances).fill(true)])) continue;
+
+    const { x, y } = getTileXYFromIndex(i, tiledJSON.width);
+
+    if(tiledJSON.layers[5].objects.find(obj => obj.x === x * 64 && obj.y === (y + 1) * 64)) continue;
+
+    const decorSets = themeFloor.decor;
+    const decorChoice = ROT.RNG.getItem(decorSets);
+
+    // no gid math because we ripped these numbers directly
+    const obj = {
+      gid: ROT.RNG.getItem(decorChoice),
+      height: 64,
+      id: tiledJSON.nextobjectid,
+      name: "",
+      rotation: 0,
+      type: "",
+      visible: true,
+      width: 64,
+      x: x * 64,
+      y: (y + 1) * 64
+    };
+  
+    tiledJSON.layers[5].objects.push(obj);
+    tiledJSON.nextobjectid++;
+  }
 };
 
-const placeRoomDecor = (tiledJSON, room) => {
-  // TODO:
+const placeRoomDecor = (tiledJSON, themeFloor, room) => {
+  // TODO: place specific "rooms" (bed, a few furniture, etc based on room config - some storage rooms, some bedrooms, some lounges, etc)
   // room.getLeft() getRight() getTop() getBottom() getCenter() [x,y]
 };
 
@@ -542,20 +577,6 @@ const writeMap = (name, config, mapData, rooms, theme) => {
   const walls = allWalls.map((val) => val === 0 ? 0 : firstWallGid + theme.wall.spriteStart);
   tiledJSON.layers[4].data = autotileWalls(walls, doors, tiledJSON.width, tiledJSON.height, theme.wall.allowEmptyWalls);
 
-  // handle doors
-  if(config.doors && theme.wall.allowDoors) {
-    rooms.forEach(room => {
-      room.getDoors((x, y) => {
-        addDoor(tiledJSON, x + 5, y + 5, theme.wall);
-      });
-
-      placeRoomDecor(tiledJSON, room);
-    });
-
-  } else {
-    placeRandomDecor(tiledJSON);
-  }
-
   if(theme.floor.allowFluids) {
     const fluidConfig = ROT.RNG.getItem(fluidConfigs);
     console.log('Fluid Config', fluidConfig.name);
@@ -572,6 +593,22 @@ const writeMap = (name, config, mapData, rooms, theme) => {
 
   if(theme.floor.allowTrees) {
     placeFoliage(tiledJSON, theme.floor);
+  }
+
+  // handle doors
+  if(config.doors && theme.wall.allowDoors) {
+    rooms.forEach(room => {
+      room.getDoors((x, y) => {
+        addDoor(tiledJSON, x + 5, y + 5, theme.wall);
+      });
+
+      placeRoomDecor(tiledJSON, theme.floor, room);
+    });
+    
+    placeRandomDecor(tiledJSON, theme.floor, 99);
+
+  } else {
+    placeRandomDecor(tiledJSON, theme.floor, 9);
   }
 
   // door debug code
