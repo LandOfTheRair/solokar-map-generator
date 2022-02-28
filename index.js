@@ -325,15 +325,13 @@ const placeFoliage = (tiledJSON, themeFloor) => {
   });
 };
 
-const placeFluids = (tiledJSON, themeWall, themeFloor) => {
+const placeFluids = (tiledJSON, fluidConfig, themeWall, themeFloor) => {
 
   const firstGid = tiledJSON.tilesets[0].firstgid;
   const fluidSets = themeFloor.fluids;
   const fluidChoice = ROT.RNG.getItem(fluidSets);
   
   // pick a config
-  const fluidConfig = ROT.RNG.getItem(fluidConfigs);
-  console.log('Fluid Config', fluidConfig.name);
 
   // generate a map
   const mapGenerator = new ROT.Map[fluidConfig.algo](...fluidConfig.algoArgs);
@@ -559,7 +557,17 @@ const writeMap = (name, config, mapData, rooms, theme) => {
   }
 
   if(theme.floor.allowFluids) {
-    placeFluids(tiledJSON, theme.wall, theme.floor);
+    const fluidConfig = ROT.RNG.getItem(fluidConfigs);
+    console.log('Fluid Config', fluidConfig.name);
+
+    let attempts = 0;
+    while(tiledJSON.layers[2].data.length === 0 && attempts++ < 10) {
+      placeFluids(tiledJSON, fluidConfig, theme.wall, theme.floor);
+    }
+
+    if(attempts >= 10) {
+      console.log('Failed to place fluids. 10 times. Wow?');
+    }
   }
 
   if(theme.floor.allowTrees) {
