@@ -13,12 +13,12 @@ TODO:
 
 - add config yml file
 - add floors
-- add spawners (rarely, add monsters that fight with these monsters - ie heniz/steffen, crazed/not)
-- add loot
-- add random green npcs (trainers, etc; healer trainer must not recall)
 - add portal entries (one per quadrant)
 - add portal exits (one per quadrant)
 - add succorport to prevent everything
+- add spawners (rarely, add monsters that fight with these monsters - ie heniz/steffen, crazed/not)
+- add loot
+- add random green npcs (trainers, etc; healer trainer must not recall)
 */
 
 const foliage = {
