@@ -422,6 +422,8 @@ const placeRandomDecor = (tiledJSON, themeFloor, chances = 9) => {
 };
 
 const placeRoomDecor = (tiledJSON, themeFloor, room) => {
+  if(ROT.RNG.getItem([true, ...Array(9).fill(false)])) return;
+  
   const roomTypeChoice = ROT.RNG.getItem(roomDecorConfigs);
 
   const coords = [];
