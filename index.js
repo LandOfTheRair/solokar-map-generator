@@ -28,7 +28,6 @@ config.configs.roomDecor.forEach(({ decors }) => {
 /*
 TODO:
 
-- add config yml file
 - add floors
 - add portal entries (one per quadrant)
 - add portal exits (one per quadrant)
