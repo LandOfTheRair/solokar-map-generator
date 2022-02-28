@@ -353,6 +353,8 @@ configs:
           decor: [*decorMisc]
 
     - name: Lounge
+      allowCustomFloor: true
+      customFloors: [*floorWood, *floorDarktile, *floorNicetile, *floorCobblestone]
       decors:
         - quantity: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
           decor: [*decorFurniture, *decorFurrug]
@@ -405,3 +407,10 @@ configs:
       decors:
         - quantity: [4, 5, 6, 7, 8, 9, 10]
           decor: [*decorDirectional]
+
+    - name: Graves
+      allowCustomFloor: true
+      customFloors: [*floorSwamp, *floorGrassair]
+      decors:
+        - quantity: [4, 5, 6, 7, 8, 9, 10]
+          decor: [*decorGrave]

@@ -209,6 +209,38 @@ const placeRoomDecor = (tiledJSON, themeFloor, room) => {
   if(ROT.RNG.getItem([true, ...Array(9).fill(false)])) return;
 
   const roomTypeChoice = ROT.RNG.getItem(roomDecorConfigs);
+  
+  // if custom floors are allowed, swap the tiles
+  if(roomTypeChoice.allowCustomFloor) {
+    const firstTileGid = tiledJSON.tilesets[0].firstgid;
+
+    const floor = ROT.RNG.getItem(roomTypeChoice.customFloors);
+
+    // place the base tiles
+    for(let x = room.getLeft(); x <= room.getRight(); x++) {
+      for(let y = room.getTop(); y <= room.getBottom(); y++) {
+        const i = (x + gutter) + (tiledJSON.width * (y + gutter));
+      
+        // handle floor, place default floor
+        tiledJSON.layers[0].data[i] = firstTileGid + floor.spriteStart + ROT.RNG.getItem([47, 47, 47, 48]) -1;
+      }
+    }
+
+    // place the "nice" tiles
+    for(let y = room.getTop(); y <= room.getBottom(); y++) {
+      const i = (room.getLeft() - 1 + gutter) + (tiledJSON.width * (y + gutter));
+    
+      // handle floor, place default floor
+      tiledJSON.layers[1].data[i] = firstTileGid + floor.spriteStart + 17;
+    }
+
+    for(let y = room.getTop(); y <= room.getBottom(); y++) {
+      const i = (room.getRight() + 1 + gutter) + (tiledJSON.width * (y + gutter));
+    
+      // handle floor, place default floor
+      tiledJSON.layers[1].data[i] = firstTileGid + floor.spriteStart + 15;
+    }
+  }
 
   const coords = [];
 
