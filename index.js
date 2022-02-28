@@ -10,6 +10,8 @@ const gutter = 5;
 
 /*
 TODO:
+
+- add config yml file
 - add floors
 - add spawners (rarely, add monsters that fight with these monsters - ie heniz/steffen, crazed/not)
 - add loot
@@ -423,7 +425,7 @@ const placeRandomDecor = (tiledJSON, themeFloor, chances = 9) => {
 
 const placeRoomDecor = (tiledJSON, themeFloor, room) => {
   if(ROT.RNG.getItem([true, ...Array(9).fill(false)])) return;
-  
+
   const roomTypeChoice = ROT.RNG.getItem(roomDecorConfigs);
 
   const coords = [];
@@ -649,7 +651,8 @@ const writeMap = (name, config, mapData, rooms, theme) => {
   const walls = allWalls.map((val) => val === 0 ? 0 : firstWallGid + theme.wall.spriteStart);
   tiledJSON.layers[4].data = autotileWalls(walls, doors, tiledJSON.width, tiledJSON.height, theme.wall.allowEmptyWalls);
 
-  if(theme.floor.allowFluids) {
+  // check if we can add fluids, and fail only 1/5 of the time
+  if(theme.floor.allowFluids && ROT.RNG.getItem([true, ...Array(4).fill(false)])) {
     const fluidConfig = ROT.RNG.getItem(fluidConfigs);
     console.log('Fluid Config', fluidConfig.name);
 
@@ -663,6 +666,7 @@ const writeMap = (name, config, mapData, rooms, theme) => {
     }
   }
 
+  // if we allow trees, get them in there. no fail because thieves.
   if(theme.floor.allowTrees) {
     placeFoliage(tiledJSON, theme.floor);
   }
