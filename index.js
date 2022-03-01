@@ -30,7 +30,6 @@ config.configs.roomDecor.forEach(({ decors }) => {
 /*
 TODO:
 
-- add portal exits (one per quadrant)
 - add spawners (rarely, add monsters that fight with these monsters - ie heniz/steffen, crazed/not)
 - add loot
 - add random green npcs (trainers, etc; healer trainer must not recall, detect-giving npc for mazes, exit-warping npc, etc)
@@ -129,7 +128,7 @@ const addPortalEntries = (tiledJSON, possibleSpaces) => {
     { xStart: 60, xEnd: 95, yStart: 5, yEnd: 40 },  // top right
     { xStart: 5, xEnd: 40, yStart: 60, yEnd: 95 },  // bottom left
     { xStart: 60, xEnd: 95, yStart: 60, yEnd: 95 }  // bottom right
-  ].forEach(({ xStart, xEnd, yStart, yEnd }) => {
+  ].forEach(({ xStart, xEnd, yStart, yEnd }, idx) => {
 
     const validSpacesInZone = validSpaces.filter(x => x.x >= xStart && x.x < xEnd && x.y >= yStart && x.y < yEnd);
 
@@ -145,7 +144,10 @@ const addPortalEntries = (tiledJSON, possibleSpaces) => {
         type: 'TaggedEntry',
         gid: 1717,
         x: portal.x * 64,
-        y: (portal.y + 1) * 64
+        y: (portal.y + 1) * 64,
+        properties: {
+          teleportTagRef: 'SolokarLanding-' + (idx + 1)
+        }
       });
     }
   });
@@ -153,7 +155,62 @@ const addPortalEntries = (tiledJSON, possibleSpaces) => {
 
 // create exit portals to leave solokar
 const addPortalExits = (tiledJSON, possibleSpaces) => {
+  const validSpaces = possibleSpaces.filter(tile => {
+    if(!tile.hasWall) return;
 
+    const { x, y } = tile;
+
+    const hasW =  getTileAtXY(tiledJSON.layers[4].data, genWidth + (gutter * 2), x - 1, y) !== 0;
+    const hasE =  getTileAtXY(tiledJSON.layers[4].data, genWidth + (gutter * 2), x + 1, y) !== 0;
+    const hasN =  getTileAtXY(tiledJSON.layers[4].data, genWidth + (gutter * 2), x,     y - 1) !== 0;
+    
+    const hasNE = getTileAtXY(tiledJSON.layers[4].data, genWidth + (gutter * 2), x + 1, y - 1) !== 0;
+    const hasNW = getTileAtXY(tiledJSON.layers[4].data, genWidth + (gutter * 2), x - 1, y - 1) !== 0;
+
+    const noS   = getTileAtXY(tiledJSON.layers[4].data, genWidth + (gutter * 2), x,     y + 1) === 0;
+
+    return hasW && hasE && hasN && hasNE && hasNW && noS;
+  });
+
+  [
+    { xStart: 5, xEnd: 40, yStart: 5, yEnd: 40 },   // top left
+    { xStart: 60, xEnd: 95, yStart: 5, yEnd: 40 },  // top right
+    { xStart: 5, xEnd: 40, yStart: 60, yEnd: 95 },  // bottom left
+    { xStart: 60, xEnd: 95, yStart: 60, yEnd: 95 }  // bottom right
+  ].forEach(({ xStart, xEnd, yStart, yEnd }, idx) => {
+
+    const validSpacesInZone = validSpaces.filter(x => x.x >= xStart && x.x < xEnd && x.y >= yStart && x.y < yEnd);
+
+    if(validSpacesInZone.length > 0) {
+      const portal = ROT.RNG.getItem(validSpacesInZone);
+      if(!portal) {
+        console.error(new Error('[Solokar] No valid map space for portal exit', { xStart, xEnd, yStart, yEnd }));
+        return;
+      }
+
+      const tileIdx = tiledJSON.layers[4].data[portal.idx];
+      tiledJSON.layers[4].data[portal.idx] = 0;
+
+      addTiledObject(tiledJSON, 7, {
+        name: 'Tagged Exit Back Wall',
+        type: '',
+        gid: tileIdx,
+        x: portal.x * 64,
+        y: (portal.y + 1) * 64
+      });
+
+      addTiledObject(tiledJSON, 8, {
+        name: 'Tagged Exit',
+        type: 'TaggedExit',
+        gid: 1713,
+        x: portal.x * 64,
+        y: (portal.y + 1) * 64,
+        properties: {
+          teleportTag: 'SolokarExit-' + (idx + 1)
+        }
+      });
+    }
+  });
 };
 
 const addStairs = (tiledJSON, possibleSpaces) => {
@@ -171,13 +228,13 @@ const addStairs = (tiledJSON, possibleSpaces) => {
   // stairs out = 1777
   const obj = {
     gid: 1777,
-    name: 'Tagged Exit',
+    name: 'Tagged Exit Stairs',
     type: 'StairsUp',
     x: x * 64,
     y: (y + 1) * 64,
     properties: {
-      teleportTag: 'SolokarExit',
-      teleportTagRef: 'SolokarInside'
+      teleportTag: 'SolokarExitStairs',
+      teleportTagRef: 'SolokarInsideStairs'
     }
   };
 
