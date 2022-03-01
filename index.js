@@ -206,6 +206,7 @@ const addPortalExits = (tiledJSON, possibleSpaces) => {
         x: portal.x * 64,
         y: (portal.y + 1) * 64,
         properties: {
+          teleportTagMap: 'Frostlands',
           teleportTag: 'SolokarExit-' + (idx + 1)
         }
       });
@@ -233,6 +234,7 @@ const addStairs = (tiledJSON, possibleSpaces) => {
     x: x * 64,
     y: (y + 1) * 64,
     properties: {
+      teleportTagMap: 'Frostlands',
       teleportTag: 'SolokarExitStairs',
       teleportTagRef: 'SolokarInsideStairs'
     }
