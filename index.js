@@ -30,7 +30,6 @@ config.configs.roomDecor.forEach(({ decors }) => {
 /*
 TODO:
 
-- add portal entries (one per quadrant)
 - add portal exits (one per quadrant)
 - add spawners (rarely, add monsters that fight with these monsters - ie heniz/steffen, crazed/not)
 - add loot
@@ -122,19 +121,43 @@ const getArrayOfNodesForMapZone = (tiledJSON, startX = 0, endX = 0, startY = 0, 
 };
 
 // create portal entries from risan to solokar
-const addPortalEntries = (tiledJSON) => {
-  // 1717 = trapdoor
+const addPortalEntries = (tiledJSON, possibleSpaces) => {
+  const validSpaces = possibleSpaces.filter(x => !x.hasFluid && !x.hasWall && !x.hasFoliage && !x.hasDecor && !x.hasDenseDecor && !x.hasOpaqueDecor);
+
+  [
+    { xStart: 5, xEnd: 40, yStart: 5, yEnd: 40 },   // top left
+    { xStart: 60, xEnd: 95, yStart: 5, yEnd: 40 },  // top right
+    { xStart: 5, xEnd: 40, yStart: 60, yEnd: 95 },  // bottom left
+    { xStart: 60, xEnd: 95, yStart: 60, yEnd: 95 }  // bottom right
+  ].forEach(({ xStart, xEnd, yStart, yEnd }) => {
+
+    const validSpacesInZone = validSpaces.filter(x => x.x >= xStart && x.x < xEnd && x.y >= yStart && x.y < yEnd);
+
+    if(validSpacesInZone.length > 0) {
+      const portal = ROT.RNG.getItem(validSpacesInZone);
+      if(!portal) {
+        console.error(new Error('[Solokar] No valid map space for portal entry', { xStart, xEnd, yStart, yEnd }));
+        return;
+      }
+
+      addTiledObject(tiledJSON, 8, {
+        name: 'TaggedEntry',
+        type: 'TaggedEntry',
+        gid: 1717,
+        x: portal.x * 64,
+        y: (portal.y + 1) * 64
+      });
+    }
+  });
 };
 
 // create exit portals to leave solokar
-const addPortalExits = (tiledJSON) => {
+const addPortalExits = (tiledJSON, possibleSpaces) => {
 
 };
 
-const addStairs = (tiledJSON) => {
-  // stairs out = 1777
+const addStairs = (tiledJSON, possibleSpaces) => {
 
-  const possibleSpaces = getArrayOfNodesForMapZone(tiledJSON, gutter, genWidth - gutter, gutter, genHeight - gutter);
   const validSpaces = possibleSpaces.filter(x => !x.hasFluid && !x.hasWall && !x.hasFoliage && !x.hasDecor && !x.hasDenseDecor && !x.hasOpaqueDecor);
 
   const space = ROT.RNG.getItem(validSpaces);
@@ -145,6 +168,7 @@ const addStairs = (tiledJSON) => {
 
   const { x, y } = space;
 
+  // stairs out = 1777
   const obj = {
     gid: 1777,
     name: 'Tagged Exit',
@@ -565,9 +589,12 @@ const writeMap = (name, config, mapData, rooms, theme) => {
     placeRandomDecor(tiledJSON, theme.floor, 19);
   }
 
-  addPortalEntries(tiledJSON);
-  addPortalExits(tiledJSON);
-  addStairs(tiledJSON);
+  
+  const possibleSpacesForPlacements = getArrayOfNodesForMapZone(tiledJSON, gutter, genWidth - gutter, gutter, genHeight - gutter);
+
+  addPortalEntries(tiledJSON, possibleSpacesForPlacements.slice());
+  addPortalExits(tiledJSON, possibleSpacesForPlacements.slice());
+  addStairs(tiledJSON, possibleSpacesForPlacements.slice());
 
   // door debug code
   /*
