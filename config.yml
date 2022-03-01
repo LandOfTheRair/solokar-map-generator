@@ -65,6 +65,7 @@ floors:
 
   grassair: &floorGrassair
     spriteStart: 576
+    flipLR: true
     allowFluids: true
     fluids: [*fluidWater, *fluidDarkwater]
     allowTrees: true

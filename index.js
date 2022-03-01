@@ -369,8 +369,10 @@ const placeRoomDecor = (tiledJSON, themeFloor, room) => {
 
     const floor = ROT.RNG.getItem(roomTypeChoice.customFloors);
 
+    const push = (floor.flipLR ? 1 : 0);
+
     // place the base tiles
-    for(let x = room.getLeft(); x <= room.getRight(); x++) {
+    for(let x = room.getLeft(); x <= room.getRight() + push; x++) {
       for(let y = room.getTop(); y <= room.getBottom(); y++) {
         const i = (x + gutter) + (tiledJSON.width * (y + gutter));
       
@@ -380,19 +382,45 @@ const placeRoomDecor = (tiledJSON, themeFloor, room) => {
     }
 
     // place the "nice" tiles
+
+    // top row
+    for(let x = room.getLeft(); x <= room.getRight() + push; x++) {
+      const i = tiledJSON.width * (room.getTop() - 1 + gutter) + x + gutter;
+    
+      // handle floor, place default floor
+      tiledJSON.layers[1].data[i] = firstTileGid + floor.spriteStart + (floor.flipLR ? 16 : 14);
+    }
+
+    // bottom row
+    for(let x = room.getLeft(); x <= room.getRight() + push; x++) {
+      const i = tiledJSON.width * (room.getBottom() + 1 + gutter) + x + gutter;
+    
+      // handle floor, place default floor
+      tiledJSON.layers[1].data[i] = firstTileGid + floor.spriteStart + (floor.flipLR ? 14 : 16);
+    }
+
+    // left side
     for(let y = room.getTop(); y <= room.getBottom(); y++) {
       const i = (room.getLeft() - 1 + gutter) + (tiledJSON.width * (y + gutter));
     
       // handle floor, place default floor
-      tiledJSON.layers[1].data[i] = firstTileGid + floor.spriteStart + 17;
+      tiledJSON.layers[1].data[i] = firstTileGid + floor.spriteStart + (floor.flipLR ? 15 : 17);
     }
 
+    // right side
     for(let y = room.getTop(); y <= room.getBottom(); y++) {
-      const i = (room.getRight() + 1 + gutter) + (tiledJSON.width * (y + gutter));
+      const i = (room.getRight() + (floor.flipLR ? 1 : 0) + 1 + gutter) + (tiledJSON.width * (y + gutter));
     
       // handle floor, place default floor
-      tiledJSON.layers[1].data[i] = firstTileGid + floor.spriteStart + 15;
+      tiledJSON.layers[1].data[i] = firstTileGid + floor.spriteStart + (floor.flipLR ? 17 : 15);
     }
+
+    // corners
+
+    tiledJSON.layers[1].data[tiledJSON.width * (room.getTop() - 1 + gutter) - 1 + gutter + room.getLeft()] = firstTileGid + floor.spriteStart + (floor.flipLR ? 3 : 30);
+    tiledJSON.layers[1].data[tiledJSON.width * (room.getTop() - 1 + gutter) + 1 + gutter + room.getLeft() + (room.getRight() - room.getLeft()) + push] = firstTileGid + floor.spriteStart + (floor.flipLR ? 4 : 31);
+    tiledJSON.layers[1].data[tiledJSON.width * (room.getBottom() + 1 + gutter) - 1 + gutter + room.getLeft()] = firstTileGid + floor.spriteStart + (floor.flipLR ? 2 : 33);
+    tiledJSON.layers[1].data[tiledJSON.width * (room.getBottom() + 1 + gutter) + 1 + gutter + room.getLeft() + (room.getRight() - room.getLeft()) + push] = firstTileGid + floor.spriteStart + (floor.flipLR ? 1 : 32);
   }
 
   const coords = [];
