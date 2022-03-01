@@ -14,9 +14,11 @@ Object.keys(config.decor).forEach(decorKey => config.decor[decorKey] = config.de
 
 Object.keys(config.floors).forEach(floorKey => {
   if(config.floors[floorKey].allowFluids) config.floors[floorKey].fluids = config.floors[floorKey].fluids.flat();
-  if(config.floors[floorKey].allowTrees) config.floors[floorKey].trees = config.floors[floorKey].trees.flat();
 
-  config.floors[floorKey].decor = config.floors[floorKey].decor.flat();
+  // don't flatten these, they're picked from intentionally
+  // if(config.floors[floorKey].allowTrees) config.floors[floorKey].trees = config.floors[floorKey].trees.flat();
+
+  config.floors[floorKey].decor = config.floors[floorKey].decor.flat(Infinity);
 });
 
 config.configs.roomDecor.forEach(({ decors }) => {
@@ -139,7 +141,7 @@ const placeFoliage = (tiledJSON, themeFloor) => {
     if(tiledJSON.layers[4].data[idx] || tiledJSON.layers[2].data[idx]) return 0;
     if(!ROT.RNG.getItem([true, ...Array(9).fill(false)])) return 0;
 
-    return ROT.RNG.getItem(treeChoices);
+    return ROT.RNG.getItem(treeChoices) ?? 0;
   });
 };
 
@@ -187,7 +189,7 @@ const placeRandomDecor = (tiledJSON, themeFloor, chances = 9) => {
 
     // no gid math because we ripped these numbers directly
     const obj = {
-      gid: ROT.RNG.getItem(decorChoice),
+      gid: decorChoice,
       height: 64,
       id: tiledJSON.nextobjectid,
       name: "",
