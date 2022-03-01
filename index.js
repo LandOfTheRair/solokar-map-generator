@@ -34,7 +34,9 @@ TODO:
 - add portal exits (one per quadrant)
 - add spawners (rarely, add monsters that fight with these monsters - ie heniz/steffen, crazed/not)
 - add loot
-- add random green npcs (trainers, etc; healer trainer must not recall, detect-giving npc for mazes, etc)
+- add random green npcs (trainers, etc; healer trainer must not recall, detect-giving npc for mazes, exit-warping npc, etc)
+- in game, add a room with 4 portals that drop you in random spots, as well as having a one-way exit from a staircase that can't be reached unless you came from solokar
+- generate a spoiler log with coordinates of all exits, all npcs spawned, and all loot
 */
 
 // every possible room type (for digger maze rooms)
@@ -48,6 +50,25 @@ const configs = config.configs.mapGen;
 
 // each possible fluid config
 const fluidConfigs = config.configs.fluidGen;
+
+const addTiledObject = (tiledJSON, layer, obj) => {
+  const fullObj = {
+    id: tiledJSON.nextobjectid,
+    rotation: 0,
+    visible: true,
+    height: 64,
+    width: 64,
+    ...obj
+  };
+  
+  tiledJSON.layers[layer].objects.push(fullObj);
+
+  tiledJSON.nextobjectid++;
+};
+
+const hasTiledObject = (tiledJSON, layer, x, y) => {
+  return tiledJSON.layers[layer].objects.find(obj => obj.x === x * 64 && obj.y === (y + 1) * 64);
+}
 
 // fill a map array with wall tiles (to start)
 const generateFullMap = () => {
@@ -75,9 +96,74 @@ const getTileXYFromIndex = (idx, width) => {
 
 const getTileAtXY = (array, width, x, y) => {
   return array[x + (width * y)]
-}
+};
+
+const getArrayOfNodesForMapZone = (tiledJSON, startX = 0, endX = 0, startY = 0, endY = 0) => {
+  const nodes = [];
+
+  for(let x = startX; x < endX; x++) {
+    for(let y = startY; y < endY; y++) {
+
+      const idx = x + (tiledJSON.width * y);
+      nodes.push({ 
+        x, y,
+        idx,
+        hasFluid: tiledJSON.layers[2].data[idx] > 0,
+        hasFoliage: tiledJSON.layers[3].data[idx] > 0,
+        hasWall: tiledJSON.layers[4].data[idx] > 0,
+        hasDecor: hasTiledObject(tiledJSON, 5, x, y),
+        hasDenseDecor: hasTiledObject(tiledJSON, 6, x, y),
+        hasOpaqueDecor: hasTiledObject(tiledJSON, 7, x, y)
+      });
+    }
+  }
+
+  return nodes;
+};
+
+// create portal entries from risan to solokar
+const addPortalEntries = (tiledJSON) => {
+  // 1717 = trapdoor
+};
+
+// create exit portals to leave solokar
+const addPortalExits = (tiledJSON) => {
+
+};
+
+const addStairs = (tiledJSON) => {
+  // stairs out = 1777
+
+  const possibleSpaces = getArrayOfNodesForMapZone(tiledJSON, gutter, genWidth - gutter, gutter, genHeight - gutter);
+  const validSpaces = possibleSpaces.filter(x => !x.hasFluid && !x.hasWall && !x.hasFoliage && !x.hasDecor && !x.hasDenseDecor && !x.hasOpaqueDecor);
+
+  const space = ROT.RNG.getItem(validSpaces);
+  if(!space || validSpaces.length === 0) {
+    console.error(new Error('[Solokar] No valid map space for stairs.'));
+    return;
+  }
+
+  const { x, y } = space;
+
+  const obj = {
+    gid: 1777,
+    name: 'Tagged Exit',
+    type: 'StairsUp',
+    x: x * 64,
+    y: (y + 1) * 64,
+    properties: {
+      teleportTag: 'SolokarExit'
+    }
+  };
+
+  addTiledObject(tiledJSON, 8, obj);
+
+};
 
 const addDoor = (tiledJSON, x, y, themeWall) => {
+  
+  if(hasTiledObject(tiledJSON, 7, x, y)) return;
+  if(hasTiledObject(tiledJSON, 8, x, y)) return;
 
   const isHorizontalDoor = getTileAtXY(tiledJSON.layers[4].data, tiledJSON.width, x - 1, y) !== 0
                         && getTileAtXY(tiledJSON.layers[4].data, tiledJSON.width, x + 1, y) !== 0;
@@ -96,18 +182,13 @@ const addDoor = (tiledJSON, x, y, themeWall) => {
   
     const obj = {
       gid: firstgid + tiledId,
-      height: 64,
-      id: tiledJSON.nextobjectid,
-      name: "",
-      rotation: 0,
+      name: "Door",
       type: "Door",
-      visible: true,
-      width: 64,
       x: x * 64,
       y: (y + 1) * 64
     };
   
-    tiledJSON.layers[8].objects.push(obj);
+    addTiledObject(tiledJSON, 8, obj);
 
   } else {
     const firstgid = tiledJSON.tilesets[1].firstgid;
@@ -115,21 +196,14 @@ const addDoor = (tiledJSON, x, y, themeWall) => {
   
     const obj = {
       gid: firstgid + tiledId,
-      height: 64,
-      id: tiledJSON.nextobjectid,
-      name: "",
-      rotation: 0,
+      name: "Secret Wall",
       type: "SecretWall",
-      visible: true,
-      width: 64,
       x: x * 64,
       y: (y + 1) * 64
     };
   
-    tiledJSON.layers[7].objects.push(obj);
+    addTiledObject(tiledJSON, 7, obj);
   }
-
-  tiledJSON.nextobjectid++;
 };
 
 const placeFoliage = (tiledJSON, themeFloor) => {
@@ -181,7 +255,10 @@ const placeRandomDecor = (tiledJSON, themeFloor, chances = 9) => {
 
     const { x, y } = getTileXYFromIndex(i, tiledJSON.width);
 
-    if(tiledJSON.layers[5].objects.find(obj => obj.x === x * 64 && obj.y === (y + 1) * 64)) continue;
+    if(hasTiledObject(tiledJSON, 5, x, y)) continue;
+    if(hasTiledObject(tiledJSON, 6, x, y)) continue;
+    if(hasTiledObject(tiledJSON, 7, x, y)) continue;
+    if(hasTiledObject(tiledJSON, 8, x, y)) continue;
 
     const decorSets = themeFloor.decor;
     const decorChoice = ROT.RNG.getItem(decorSets);
@@ -189,19 +266,11 @@ const placeRandomDecor = (tiledJSON, themeFloor, chances = 9) => {
     // no gid math because we ripped these numbers directly
     const obj = {
       gid: decorChoice,
-      height: 64,
-      id: tiledJSON.nextobjectid,
-      name: "",
-      rotation: 0,
-      type: "",
-      visible: true,
-      width: 64,
       x: x * 64,
       y: (y + 1) * 64
     };
-  
-    tiledJSON.layers[5].objects.push(obj);
-    tiledJSON.nextobjectid++;
+    
+    addTiledObject(tiledJSON, 5, obj);
   }
 };
 
@@ -267,19 +336,13 @@ const placeRoomDecor = (tiledJSON, themeFloor, room) => {
       // no gid math because we ripped these numbers directly
       const obj = {
         gid: ROT.RNG.getItem(decor),
-        height: 64,
-        id: tiledJSON.nextobjectid,
         name: "",
-        rotation: 0,
         type: "",
-        visible: true,
-        width: 64,
         x: x * 64,
         y: (y + 1) * 64
       };
     
-      tiledJSON.layers[5].objects.push(obj);
-      tiledJSON.nextobjectid++;
+      addTiledObject(tiledJSON, 5, obj);
 
     }
   });
@@ -501,6 +564,10 @@ const writeMap = (name, config, mapData, rooms, theme) => {
     placeRandomDecor(tiledJSON, theme.floor, 19);
   }
 
+  addPortalEntries(tiledJSON);
+  addPortalExits(tiledJSON);
+  addStairs(tiledJSON);
+
   // door debug code
   /*
   spriteData.doorStates.forEach((door, idx) => {
@@ -508,20 +575,16 @@ const writeMap = (name, config, mapData, rooms, theme) => {
   });
   */
 
-  tiledJSON.layers[13].objects.push({
+  const obj = {
     gid: 0,
     height: 64 * 110,
-    id: tiledJSON.nextobjectid,
-    name: "",
-    rotation: 0,
-    type: "",
-    visible: true,
+    visible: false,
     width: 64 * 110,
     x: 0,
     y: 0
-  });
+  };
 
-  tiledJSON.nextobjectid++;
+  addTiledObject(tiledJSON, 13, obj);
 
   // fs.writeFileSync(`./${name}.map`, formatMap(mapData));
   fs.writeJSONSync(`./${name}.json`, tiledJSON);
