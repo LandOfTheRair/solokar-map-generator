@@ -152,7 +152,8 @@ const addStairs = (tiledJSON) => {
     x: x * 64,
     y: (y + 1) * 64,
     properties: {
-      teleportTag: 'SolokarExit'
+      teleportTag: 'SolokarExit',
+      teleportTagRef: 'SolokarInside'
     }
   };
 
