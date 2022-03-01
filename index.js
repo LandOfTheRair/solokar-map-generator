@@ -32,7 +32,6 @@ TODO:
 
 - add portal entries (one per quadrant)
 - add portal exits (one per quadrant)
-- add succorport to prevent everything
 - add spawners (rarely, add monsters that fight with these monsters - ie heniz/steffen, crazed/not)
 - add loot
 - add random green npcs (trainers, etc; healer trainer must not recall, detect-giving npc for mazes, etc)
@@ -508,6 +507,21 @@ const writeMap = (name, config, mapData, rooms, theme) => {
     addDoor(tiledJSON, idx, 5, idx)
   });
   */
+
+  tiledJSON.layers[13].objects.push({
+    gid: 0,
+    height: 64 * 110,
+    id: tiledJSON.nextobjectid,
+    name: "",
+    rotation: 0,
+    type: "",
+    visible: true,
+    width: 64 * 110,
+    x: 0,
+    y: 0
+  });
+
+  tiledJSON.nextobjectid++;
 
   // fs.writeFileSync(`./${name}.map`, formatMap(mapData));
   fs.writeJSONSync(`./${name}.json`, tiledJSON);
