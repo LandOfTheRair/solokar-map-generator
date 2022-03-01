@@ -33,8 +33,8 @@ TODO:
 - add spawners (rarely, add monsters that fight with these monsters - ie heniz/steffen, crazed/not)
 - add loot
 - add random green npcs (trainers, etc; healer trainer must not recall, detect-giving npc for mazes, exit-warping npc, etc)
-- in game, add a room with 4 portals that drop you in random spots, as well as having a one-way exit from a staircase that can't be reached unless you came from solokar
 - generate a spoiler log with coordinates of all exits, all npcs spawned, and all loot
+- in game, add buff that kicks you out after a certain amount of time; should be right around reset time in tick count. attempting entrance at this time should not work
 */
 
 // every possible room type (for digger maze rooms)
