@@ -141,7 +141,7 @@ const addPortalEntries = (tiledJSON, possibleSpaces) => {
       }
 
       addTiledObject(tiledJSON, 8, {
-        name: 'TaggedEntry',
+        name: 'Tagged Entry',
         type: 'TaggedEntry',
         gid: 1717,
         x: portal.x * 64,
