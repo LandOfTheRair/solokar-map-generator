@@ -31,8 +31,10 @@ config.configs.roomDecor.forEach(({ decors }) => {
 TODO:
 
 - add spawners (rarely, add monsters that fight with these monsters - ie heniz/steffen, crazed/not)
-- add loot
+- add loot 
+- add treasure chests
 - add random green npcs (trainers, etc; healer trainer must not recall, detect-giving npc for mazes, exit-warping npc, etc)
+- config file should support different solokar-style instances with different configs; map prop should specify which config to use (for down/upscaling) (Ruukar for the lil one)
 */
 
 // every possible room type (for digger maze rooms)
@@ -704,6 +706,8 @@ const writeMap = (name, config, mapData, rooms, theme) => {
     tiledJSON.properties[key + 'X'] = 174;
     tiledJSON.properties[key + 'Y'] = 224;
   });
+
+  tiledJSON.properties.respawnKick = true;
 
   // fs.writeFileSync(`./${name}.map`, formatMap(mapData));
   fs.writeJSONSync(`./${name}.json`, tiledJSON);
