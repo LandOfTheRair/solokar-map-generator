@@ -33,8 +33,6 @@ TODO:
 - add spawners (rarely, add monsters that fight with these monsters - ie heniz/steffen, crazed/not)
 - add loot
 - add random green npcs (trainers, etc; healer trainer must not recall, detect-giving npc for mazes, exit-warping npc, etc)
-- generate a spoiler log with coordinates of all exits, all npcs spawned, and all loot
-- in game, add buff that kicks you out after a certain amount of time; should be right around reset time in tick count. attempting entrance at this time should not work
 */
 
 // every possible room type (for digger maze rooms)
@@ -201,7 +199,7 @@ const addPortalExits = (tiledJSON, possibleSpaces) => {
 
       addTiledObject(tiledJSON, 8, {
         name: 'Tagged Exit',
-        type: 'TaggedExit',
+        type: 'Teleport',
         gid: 1713,
         x: portal.x * 64,
         y: (portal.y + 1) * 64,
@@ -700,6 +698,12 @@ const writeMap = (name, config, mapData, rooms, theme) => {
   };
 
   addTiledObject(tiledJSON, 13, obj);
+
+  ['gearDrop', 'kick', 'respawn'].forEach(key => {
+    tiledJSON.properties[key + 'Map'] = 'Frostlands';
+    tiledJSON.properties[key + 'X'] = 174;
+    tiledJSON.properties[key + 'Y'] = 224;
+  });
 
   // fs.writeFileSync(`./${name}.map`, formatMap(mapData));
   fs.writeJSONSync(`./${name}.json`, tiledJSON);
