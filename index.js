@@ -708,6 +708,7 @@ const writeMap = (name, config, mapData, rooms, theme) => {
   });
 
   tiledJSON.properties.respawnKick = true;
+  tiledJSON.properties.blockEntryMessage = 'The maze is currently shifting... try back later!';
 
   // fs.writeFileSync(`./${name}.map`, formatMap(mapData));
   fs.writeJSONSync(`./${name}.json`, tiledJSON);
